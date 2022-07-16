@@ -9,8 +9,12 @@ The required dependencies for running onsite-fot-planner are:
 * scipy
 * setuptools==58.0.4
 
+One could simply install the dependencies listed in `requirements.txt` by running (in your Python environment):
+	
+	pip install -r requirements.txt
 
-Frenet optimal trajectoriy planner can be installed with (run it under the folder `onsite-fot-planner/`):
+## Install fot as a submodule
+Frenet optimal trajectory planner can be installed with (run it under the folder `onsite-fot-planner/`):
 
 	git clone https://github.com/ZhaoXiaocong20/frenet_optimal_trajectory_planner.git
 
