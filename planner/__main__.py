@@ -11,7 +11,7 @@ if __name__ == "__main__":
     for scenario in os.listdir(input_dir):
         print("Start testing "+scenario)
         env,observation,opendrive,goal,dt = onsite.env.make(input_dir + '/' + scenario, output_dir)
-        planner = FOT(observation, goal, dt)
+        planner = FOT(observation, goal, dt)  # generate a fot planner 
         step = 0
         planner.prepare_data(observation)
         success = planner.planning()
