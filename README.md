@@ -1,6 +1,6 @@
-# Frenet Optimal Planner for Onsite
+## Frenet Optimal Trajectory Planner for Onsite
 
-## Requirements
+### Requirements
 The required dependencies for running onsite-fot-planner are:
 
 * matplotlib
@@ -13,7 +13,7 @@ One could simply install the dependencies listed in `requirements.txt` by runnin
 	
 	pip install -r requirements.txt
 
-## Install fot as a submodule
+### Install fot as a submodule
 Frenet optimal trajectory planner can be installed with (run it under the folder `onsite-fot-planner/`):
 
 	git clone https://github.com/ZhaoXiaocong20/frenet_optimal_trajectory_planner.git
