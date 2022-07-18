@@ -1,12 +1,21 @@
 
 import copy
-from scipy.optimize import minimize
+import os
+import platform
+import sys
+
 import matplotlib.patches as patch
 import matplotlib.pyplot as plt
 import numpy as np
-import sys
-sys.path.append('.')
-from frenet_optimal_trajectory_planner.FrenetOptimalTrajectory import fot_wrapper
+from scipy.optimize import minimize
+
+if platform.system() == 'Windows':
+    sys.path.append('.')
+elif platform.system() == 'Darwin':
+    sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "..")))
+
+from frenet_optimal_trajectory_planner.FrenetOptimalTrajectory import \
+    fot_wrapper
 
 
 class FOT():

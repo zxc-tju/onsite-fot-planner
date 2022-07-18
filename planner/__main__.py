@@ -1,11 +1,18 @@
 import os
+import platform
+
 import onsite
+
 # from idm import IDM
 from fot_planner import FOT
 
 if __name__ == "__main__":
-    input_dir = "./inputs"
-    output_dir = "./outputs"
+    if platform.system() == 'Windows':
+        input_dir = "./inputs"
+        output_dir = "./outputs"
+    elif platform.system() == 'Darwin':
+        input_dir = os.path.join(os.getcwd(), "../inputs")
+        output_dir = os.path.join(os.getcwd(), "../outputs")
     # planner = IDM()
 
     for scenario in os.listdir(input_dir):
