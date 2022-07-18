@@ -9,10 +9,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import minimize
 
-if platform.system() == 'Windows':
-    sys.path.append('.')
-elif platform.system() == 'Darwin':
+if platform.system() == 'Darwin':
     sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "..")))
+else:
+    sys.path.append('.')
 
 from frenet_optimal_trajectory_planner.FrenetOptimalTrajectory import \
     fot_wrapper
