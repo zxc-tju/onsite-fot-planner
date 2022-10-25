@@ -19,9 +19,10 @@ from frenet_optimal_trajectory_planner.FrenetOptimalTrajectory import \
 
 
 class FOT():
-    def __init__(self, obs, goal, dt=0.1):
+    def __init__(self, obs):
 
-        self.goal = goal
+        self.goal = obs.test_setting['goal']
+        dt = obs.test_setting['dt']
         self.goal_reached = 0
         self.result_x = []
         self.result_y = []
@@ -30,15 +31,15 @@ class FOT():
             "max_speed": 50.0,
             "max_accel": 15.0,
             "max_curvature": 20.0,
-            "max_road_width_l": 5.0,
-            "max_road_width_r": 5.0,
-            "max_steering": 2,
+            "max_road_width_l": 3.0,
+            "max_road_width_r": 3.0,
+            "max_steering": 3,
             "d_road_w": 0.5,
             "dt": dt,
             "maxt": 2.0,
-            "mint": 0.5,
+            "mint": 0.04,
             "d_t_s": 0.3,
-            "n_s_sample": 5.0,
+            "n_s_sample": 20.0,
             "obstacle_clearance": 0.1,
             "kd": 2,
             "kv": 0.1,
@@ -49,35 +50,36 @@ class FOT():
             "klat": 1.0,
             "klon": 1.0,
             "num_threads": 0,  # set 0 to avoid using threaded algorithm
-            "wp": np.concatenate(([[obs[0, 0], obs[0, 1]], ],
-                                  [[np.mean(self.goal[0, :]), np.mean(self.goal[1, :])], ]), axis=0)
+            "wp": np.concatenate(([[obs.vehicle_info['ego']['x'], obs.vehicle_info['ego']['y']], ],
+                                  [[np.mean(self.goal['x']), np.mean(self.goal['y'])], ]), axis=0)
         }
 
     def prepare_data(self, raw_data):
+        
+        count = 0
+        for k,v in raw_data.vehicle_info.items():
+            if not k=='ego':
+                count += 1
+                obs_center = np.array([[v['x'], v['y'], v['x'], v['y']],])
+                obs_size = np.array([[-0.6*v['length'], -0.6*v['width'], 0.6*v['length'], 0.6*v['width']],])
+                if count==1:
+                    obs_cornerpoint = obs_center+obs_size
+                else:
+                    obs_cornerpoint = np.r_[obs_cornerpoint, obs_center+obs_size]
 
-        row = np.size(raw_data, 0) - 1
-        obs_center = np.concatenate(
-            (raw_data[1:, 0:2], raw_data[1:, 0:2]), axis=1)
-        obs_size = np.c_[
-            -0.5*raw_data[1:, 4],
-            -0.5*raw_data[1:, 5],
-            0.5*raw_data[1:, 4],
-            0.5*raw_data[1:, 5]]
-        obs_cornerpoint = obs_center + obs_size
-
-        heading_agnle = raw_data[0, 3]
-        vx = raw_data[0, 2] * np.cos(heading_agnle)
-        vy = raw_data[0, 2] * np.sin(heading_agnle)
+        heading_agnle = raw_data.vehicle_info['ego']['yaw']
+        vx = raw_data.vehicle_info['ego']['v'] * np.cos(heading_agnle)
+        vy = raw_data.vehicle_info['ego']['v'] * np.sin(heading_agnle)
 
         self.data4fot = {
             's0': 0,
-            'target_speed': 40,
+            'target_speed': 50,
             'wp': self.hyperparameters['wp'],
             'obs': obs_cornerpoint,
-            'pos': raw_data[0, 0:2],
+            'pos': np.array([raw_data.vehicle_info['ego']['x'],raw_data.vehicle_info['ego']['y']]),
             'vel': [vx, vy],
             'heading': heading_agnle,
-            'vel_l': raw_data[0, 4],
+            'vel_l': raw_data.vehicle_info['ego']['v'],
         }
 
     def planning(self):
