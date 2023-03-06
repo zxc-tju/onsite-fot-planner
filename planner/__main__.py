@@ -1,7 +1,6 @@
 from onsite import scenarioOrganizer, env
 import time
 from fot_planner import FOT
-# from lattice.lattice_planner import lattice_planning, prepare_inputs
 
 if __name__ == "__main__":
     
@@ -13,8 +12,7 @@ if __name__ == "__main__":
     # 实例化场景管理模块（ScenairoOrganizer）和场景测试模块（Env）
     so = scenarioOrganizer.ScenarioOrganizer()
     envi = env.Env()
-    # 初始化IDM规控器
-    # planner = IDM()
+  
     # 根据配置文件config.py装载场景，指定输入文件夹即可，会自动检索配置文件
     so.load(input_dir, output_dir)
 
@@ -32,42 +30,32 @@ if __name__ == "__main__":
         # record initial position
         init_pos = [observation['vehicle_info']['ego']['x'], observation['vehicle_info']['ego']['y']]
 
-        # try:
-        "fot"
-        # generate a fot planner
-        planner = FOT(observation)   
-        step = 0
-        planner.prepare_data(observation)
-        success = planner.planning()
-        "end of fot"
-        # 当测试还未进行完毕，即观察值中test_setting['end']还是-1的时候
-        while observation['test_setting']['end'] == -1:
-            "fot"
-            step += 1
+        try:
+            # generate a fot planner
+            planner = FOT(observation)   
+            step = 0
             planner.prepare_data(observation)
-            if step > 0:
-                success = planner.planning()
-                step = 0
-                if success:
-                    action = planner.generate_control()
-                    # planner.show_frame()
+            success = planner.planning()
+
+            # 当测试还未进行完毕，即观察值中test_setting['end']还是-1的时候
+            while observation['test_setting']['end'] == -1:
+
+                step += 1
+                planner.prepare_data(observation)
+                if step > 0:
+                    success = planner.planning()
+                    step = 0
+                    if success:
+                        action = planner.generate_control()
+                    else:
+                        action = planner.generate_control(flag=True)
                 else:
                     action = planner.generate_control(flag=True)
-                    # planner.show_frame()
-            else:
-                action = planner.generate_control(flag=True)
-                # planner.show_frame()
-            "end of fot"
-
-            # "lattice"
-            # path_point, vehicle_list = prepare_inputs(observation, init_pos)
-            # action = lattice_planning(path_point, vehicle_list,show_results=False)
-            # "end of lattice"
             
-            observation = envi.step(action)  # 根据车辆的action，更新场景，并返回新的观测值。
-        # 如果测试完毕，将测试结果传回场景管理模块（ScenarioOrganizer)
-        so.add_result(scenario_to_test, observation['test_setting']['end'])
-        # except:
-        #     continue    
+                observation = envi.step(action)  # 根据车辆的action，更新场景，并返回新的观测值。
+            # 如果测试完毕，将测试结果传回场景管理模块（ScenarioOrganizer)
+            so.add_result(scenario_to_test, observation['test_setting']['end'])
+        except:
+            continue    
     toc = time.time()
     print(toc - tic)
