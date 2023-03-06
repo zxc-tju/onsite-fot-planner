@@ -21,8 +21,8 @@ from frenet_optimal_trajectory_planner.FrenetOptimalTrajectory import \
 class FOT():
     def __init__(self, obs):
 
-        self.goal = obs.test_setting['goal']
-        dt = obs.test_setting['dt']
+        self.goal = obs['test_setting']['goal']
+        dt = obs['test_setting']['dt']
         self.goal_reached = 0
         self.result_x = []
         self.result_y = []
@@ -50,14 +50,14 @@ class FOT():
             "klat": 1.0,
             "klon": 1.0,
             "num_threads": 0,  # set 0 to avoid using threaded algorithm
-            "wp": np.concatenate(([[obs.vehicle_info['ego']['x'], obs.vehicle_info['ego']['y']], ],
+            "wp": np.concatenate(([[obs['vehicle_info']['ego']['x'], obs['vehicle_info']['ego']['y']], ],
                                   [[np.mean(self.goal['x']), np.mean(self.goal['y'])], ]), axis=0)
         }
 
     def prepare_data(self, raw_data):
         
         count = 0
-        for k,v in raw_data.vehicle_info.items():
+        for k,v in raw_data['vehicle_info'].items():
             if not k=='ego':
                 count += 1
                 obs_center = np.array([[v['x'], v['y'], v['x'], v['y']],])
@@ -67,19 +67,19 @@ class FOT():
                 else:
                     obs_cornerpoint = np.r_[obs_cornerpoint, obs_center+obs_size]
 
-        heading_agnle = raw_data.vehicle_info['ego']['yaw']
-        vx = raw_data.vehicle_info['ego']['v'] * np.cos(heading_agnle)
-        vy = raw_data.vehicle_info['ego']['v'] * np.sin(heading_agnle)
+        heading_agnle = raw_data['vehicle_info']['ego']['yaw']
+        vx = raw_data['vehicle_info']['ego']['v'] * np.cos(heading_agnle)
+        vy = raw_data['vehicle_info']['ego']['v'] * np.sin(heading_agnle)
 
         self.data4fot = {
             's0': 0,
             'target_speed': 50,
             'wp': self.hyperparameters['wp'],
             'obs': obs_cornerpoint,
-            'pos': np.array([raw_data.vehicle_info['ego']['x'],raw_data.vehicle_info['ego']['y']]),
+            'pos': np.array([raw_data['vehicle_info']['ego']['x'],raw_data['vehicle_info']['ego']['y']]),
             'vel': [vx, vy],
             'heading': heading_agnle,
-            'vel_l': raw_data.vehicle_info['ego']['v'],
+            'vel_l': raw_data['vehicle_info']['ego']['v'],
         }
 
     def planning(self):
