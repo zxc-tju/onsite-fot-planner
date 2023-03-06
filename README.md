@@ -3,10 +3,13 @@
 ### Requirements
 The required dependencies for running onsite-fot-planner are:
 
+* onsite==0.3.2
 * matplotlib
 * numpy
 * scipy
 * setuptools==58.0.4
+* tables
+* imageio
 
 One could simply install the dependencies listed in `requirements.txt` by running (in your Python environment):
 	
