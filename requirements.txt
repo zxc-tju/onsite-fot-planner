@@ -1,6 +1,6 @@
 matplotlib
 numpy
-onsite==0.3.2
+onsite
 scipy
 setuptools==58.0.4
 tables

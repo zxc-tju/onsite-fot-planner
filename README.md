@@ -3,7 +3,7 @@
 ### Requirements
 The required dependencies for running onsite-fot-planner are:
 
-* onsite==0.3.2
+* onsite
 * matplotlib
 * numpy
 * scipy
