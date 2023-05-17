@@ -1,6 +1,7 @@
 from onsite import scenarioOrganizer, env
 import time
 from fot_planner import FOT
+import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
     
@@ -53,9 +54,15 @@ if __name__ == "__main__":
                     action = planner.generate_control(flag=True)
             
                 observation = envi.step(action)  # 根据车辆的action，更新场景，并返回新的观测值。
+
+        except Exception as e:
+            print(repr(e))
+            
+        finally:
             # 如果测试完毕，将测试结果传回场景管理模块（ScenarioOrganizer)
             so.add_result(scenario_to_test, observation['test_setting']['end'])
-        except:
-            continue    
+            # 在每一次测试最后都关闭可视化界面，避免同时存在多个可视化
+            plt.close()  
+
     toc = time.time()
     print(toc - tic)
