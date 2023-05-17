@@ -1,4 +1,4 @@
-FROM 873690878/onsite:0.1.7
+FROM huangyan520/onsite:1.0.4
 
 COPY ./planner ./planner
 
