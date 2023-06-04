@@ -18,6 +18,6 @@ One could simply install the dependencies listed in `requirements.txt` by runnin
 ### Install fot as a submodule
 Frenet optimal trajectory planner can be installed with (run it under the folder `onsite-fot-planner/`):
 
-	git clone https://github.com/ZhaoXiaocong20/frenet_optimal_trajectory_planner.git
+	git clone https://github.com/zxctju/frenet_optimal_trajectory_planner.git
 
 Build fot planner by running `bash build.sh` under the folder `onsite-fot-planner/frenet_optimal_trajectory_planner/`
